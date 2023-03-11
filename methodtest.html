@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Method test</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico">
+    </head>
+   <body>
+        <form id="httpForm">
+            <fieldset>
+                <label for="id">ID:</label>
+                <input type="text" name="id" id="id"/>
+            </fieldset>
+            <fieldset>
+                <label for="article_name">Article Name:</label>
+                <input type="text" name="article_name" id="article_name"/>
+            </fieldset>
+            <fieldset>    
+                <label for="article_body">Message:</label>
+                <textarea id="article_body" form="httpForm" name="article_body"></textarea>
+            </fieldset>
+            <input type="hidden" name="date">
+
+            <button id="postBtn" type="submit">Post</button>
+            <button id="getBtn" type="submit">Get</button>
+            <button id="putBtn" type="submit">Put</button>
+            <button id="deleteBtn" type="submit">Delete</button>
+        </form>
+        <h2>Output:</h2>
+        <output id="reponse"></output>
+   </body>
+   <script>
+        let postBtn = document.getElementById("postBtn");
+        let getBtn = document.getElementById("getBtn");
+        let putBtn = document.getElementById("putBtn");
+        let deleteBtn = document.getElementById("deleteBtn");
+
+        postBtn.requestType = "get"
+        postBtn.addEventListener("click", sendRequest);
+
+        function sendRequest(e) {
+            let requestType = e.target.requestType;
+            console.log(requestType);
+            fetch(`https://httpbin.org/${type}`, {
+                method : `${type.toUpperCase()}`
+            })
+            .then(response => response.json())
+            .then((response) => {
+                let text = "<table>"; 
+                for (let x in data) {
+                    console.log(x);
+                    text += "<tr><td>" + data[x].name + "</td></tr>";
+                }
+                text += "</table>"
+                document.getElementById("reponse").innerHTML = text;
+            }).catch( (error) => {
+                console.log(error)
+                document.getElementById("reponse").innerHTML = 'request failed';
+            });
+        }
+
+   </script>
+</html>
