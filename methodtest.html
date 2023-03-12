@@ -20,7 +20,6 @@
                 <label for="article_body">Message:</label>
                 <textarea id="article_body" form="httpForm" name="article_body"></textarea>
             </fieldset>
-            <input type="hidden" name="date">
 
             <button id="postBtn" type="submit">Post</button>
             <button id="getBtn" type="submit">Get</button>
@@ -36,28 +35,65 @@
         let putBtn = document.getElementById("putBtn");
         let deleteBtn = document.getElementById("deleteBtn");
 
-        postBtn.requestType = "get"
+        postBtn.requestType = "post"
         postBtn.addEventListener("click", sendRequest);
 
-        function sendRequest(e) {
+        getBtn.requestType = "get"
+        getBtn.addEventListener("click", sendRequest);
+
+        putBtn.requestType = "put"
+        putBtn.addEventListener("click", sendRequest);
+
+        deleteBtn.requestType = "delete"
+        deleteBtn.addEventListener("click", sendRequest);
+        
+
+        async function sendRequest(e) {
+            e.preventDefault();
             let requestType = e.target.requestType;
-            console.log(requestType);
-            fetch(`https://httpbin.org/${type}`, {
-                method : `${type.toUpperCase()}`
-            })
-            .then(response => response.json())
-            .then((response) => {
-                let text = "<table>"; 
-                for (let x in data) {
-                    console.log(x);
-                    text += "<tr><td>" + data[x].name + "</td></tr>";
+
+            let response = null;
+            let data = null;
+            
+            switch(requestType) {
+                case 'post' :
+                case 'put' :
+               
+                    data = new FormData(document.forms.httpForm);
+                    data.append('date', Date());         
+                    response = await fetch(`https://httpbin.org/${requestType}`, {
+                    method : `${requestType.toUpperCase()}`,
+                    body : data,
+                    });
+                break;
+                case 'delete' :
+                case 'get' :
+                    data = new URLSearchParams(new FormData(document.forms.httpForm));               
+                    response = await fetch(`https://httpbin.org/${requestType}?${data}`, {
+                    method : `${requestType.toUpperCase()}`,
+                    cache : "no-cache",
+                    });
+                break;
+            }
+
+            if(!response.ok){
+                console.log(await response.error());
+                document.getElementById("reponse").innerHTML = 'request';
+            } else {
+                response = await response.json();
+
+                let text = "<table border=1>"
+                for (let x in response) {
+                    contents = response[x];
+                    if(typeof contents === "object") {
+                        contents = `<pre>${JSON.stringify(contents)}<pre>`;
+                        contents = contents.replaceAll(',', ',\n');
+                    }
+                    text += `<tr><td><b>${x}</b></td><td>${contents}</td>`;
                 }
                 text += "</table>"
                 document.getElementById("reponse").innerHTML = text;
-            }).catch( (error) => {
-                console.log(error)
-                document.getElementById("reponse").innerHTML = 'request failed';
-            });
+            }
         }
 
    </script>
