@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Web Component</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.ico">
+        <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> <!-- using vue -->
+    </head>
+    <body id="app">
+        <h1>Vue Button:</h1>
+        <button-count></button-count>
+    </body>
+    <script>
+        const app = Vue.createApp({})
+        app.component(
+            'button-count',
+            {
+                data() {
+                    return {
+                        count : 0
+                    }
+                },
+                template: 
+                    `<button @click="count++">
+                        You clicked me {{ count }} times.
+                    </button>`,
+            }
+        )
+        app.mount("#app");
+    </script>
+   
+</html>
